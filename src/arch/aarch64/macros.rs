@@ -1,78 +1,12 @@
 //! Convenient macro to read a CPU register
 
-/// read from CPU register using MRS instruction
-#[macro_export]
-macro_rules! reg32_read {
-    ( $reg:ident ) => {
-        {
-            let mut val : u32;
-            unsafe {
-                asm!(concat!("mrs $0, ", stringify!($reg))
-                     : "=r"(val)
-                    );
-            }
-
-            val
-        }
-    }
-}
-
-/// read from CPU register using MRS instruction
-#[macro_export]
-macro_rules! reg64_read {
-    ( $reg:ident ) => {
-        {
-            let mut val : u64;
-            unsafe {
-                asm!(concat!("mrs $0, ", stringify!($reg))
-                     : "=r"(val)
-                    );
-            }
-
-            val
-        }
-    }
-}
-
-/// write to a CPU register using MSR instruction
-#[macro_export]
-macro_rules! reg32_write {
-    ( $reg:ident, $val:expr ) => {
-        {
-            let val : u32 = $val;
-            unsafe {
-                asm!(concat!("msr ", stringify!($reg), "$0" )
-                     :
-                     : "r"(val)
-                    );
-            }
-        }
-    }
-}
-
-/// write to a CPU register using MSR instruction
-#[macro_export]
-macro_rules! reg64_write {
-    ( $reg:ident, $val:expr ) => {
-        {
-            let val : u64 = $val;
-            unsafe {
-                asm!(concat!("msr ", stringify!($reg), "$0" )
-                     :
-                     : "r"(val)
-                    );
-            }
-        }
-    }
-}
-
 /// dsb instruction
 #[macro_export]
 macro_rules! dsb {
     () => {
         {
             unsafe {
-                asm!(concat!("dsb"));
+                asm!("dsb");
             }
         }
     }
@@ -84,7 +18,7 @@ macro_rules! dmb {
     () => {
         {
             unsafe {
-                asm!(concat!("dmb"));
+                asm!("dmb");
             }
         }
     }
@@ -96,8 +30,65 @@ macro_rules! isb {
     () => {
         {
             unsafe {
-                asm!(concat!("isb"));
+                asm!("isb");
             }
         }
     }
+}
+
+#[macro_export]
+macro_rules! def_reg_read {
+    ( $reg:ident, $t:ty ) => {
+            #[inline]
+            pub fn read() -> $t {
+                let mut val : $t;
+                unsafe {
+                    asm!(concat!("mrs $0, ", stringify!($reg))
+                         : "=r"(val)
+                        );
+                }
+                val
+            }
+    }
+}
+#[macro_export]
+macro_rules! def_reg_write {
+    ( $reg:ident, $t:ty ) => {
+        #[inline]
+        pub fn write(val : $t) {
+            unsafe {
+                asm!(concat!("msr ", stringify!($reg), ", $0" )
+                     :
+                     : "r"(val)
+                    );
+            }
+        }
+    }
+}
+
+#[macro_export]
+macro_rules! def_reg {
+    ($reg:ident, $t:ty, rw, $($field:ident($l:expr, $r:expr),)* ) => {
+        #[allow(non_snake_case)]
+        pub mod $reg {
+            def_reg_read!($reg, $t);
+            def_reg_write!($reg, $t);
+            def_bitfields!($t, $($field($l, $r),)*);
+        }
+    };
+    ($reg:ident, $t:ty, ro, $($field:ident($l:expr, $r:expr),)* ) => {
+        #[allow(non_snake_case)]
+        pub mod $reg {
+            def_reg_read!($reg, $t);
+            def_bitfields!($t, $($field($l, $r),)*);
+        }
+    };
+    ($reg:ident, $t:ty, wo, $($field:ident($l:expr, $r:expr),)* ) => {
+        #[allow(non_snake_case)]
+        pub mod $reg {
+            def_reg_write!($reg, $t);
+            def_bitfields!($t, $($field($l, $r),)*);
+        }
+    };
+
 }

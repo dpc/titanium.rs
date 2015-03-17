@@ -10,13 +10,17 @@
 
 extern crate core;
 
+#[macro_use]
+pub mod macros;
+
+#[macro_use]
+pub mod arch;
+
 pub mod lang;
 pub mod io;
 pub mod drv;
 pub mod consts;
 
-#[macro_use]
-pub mod arch;
 
 #[test]
 fn it_works() {
