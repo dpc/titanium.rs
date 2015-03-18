@@ -1,40 +1,6 @@
 //! Convenient macro to read a CPU register
 
-/// dsb instruction
-#[macro_export]
-macro_rules! dsb {
-    () => {
-        {
-            unsafe {
-                asm!("dsb");
-            }
-        }
-    }
-}
 
-/// dmb instruction
-#[macro_export]
-macro_rules! dmb {
-    () => {
-        {
-            unsafe {
-                asm!("dmb");
-            }
-        }
-    }
-}
-
-/// isb instruction
-#[macro_export]
-macro_rules! isb {
-    () => {
-        {
-            unsafe {
-                asm!("isb");
-            }
-        }
-    }
-}
 
 #[macro_export]
 macro_rules! def_reg_read {
@@ -45,6 +11,9 @@ macro_rules! def_reg_read {
                 unsafe {
                     asm!(concat!("mrs $0, ", stringify!($reg))
                          : "=r"(val)
+                         :
+                         :
+                         : "volatile"
                         );
                 }
                 val
@@ -60,6 +29,8 @@ macro_rules! def_reg_write {
                 asm!(concat!("msr ", stringify!($reg), ", $0" )
                      :
                      : "r"(val)
+                     :
+                     : "volatile"
                     );
             }
         }
