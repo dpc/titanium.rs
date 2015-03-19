@@ -10,7 +10,7 @@ pub fn local_irqs_disable() {
         asm!("msr daifset, #2"
              :
              :
-             : "cc"
+             : "cc", "memory"
              : "volatile")
     }
 }
@@ -20,7 +20,7 @@ pub fn local_irqs_enable() {
         asm!("msr daifclr, #2"
              :
              :
-             : "cc"
+             : "cc", "memory"
              : "volatile")
     }
 }

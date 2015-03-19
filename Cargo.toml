@@ -3,5 +3,12 @@ name = "titanium"
 version = "0.0.1"
 authors = ["Dawid Ciężarkiewicz <dpc@ucore.info>"]
 
+[features]
+default = []
+
 [dependencies.core]
 git = "https://github.com/dpc/libcore-git.rs.git"
+
+[dependencies.selftest]
+path = "selftest"
+optional = true

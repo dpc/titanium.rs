@@ -2,6 +2,7 @@
 #![feature(core)]
 #![feature(lang_items)]
 #![feature(asm)]
+#![feature(static_assert)]
 #![no_std]
 
 #![feature(trace_macros)]
@@ -21,7 +22,5 @@ pub mod io;
 pub mod drv;
 pub mod consts;
 
-
-#[test]
-fn it_works() {
-}
+#[macro_use]
+pub mod selftest;
