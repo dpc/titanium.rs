@@ -2,6 +2,7 @@
 pub mod macros;
 pub mod reg;
 pub mod mmu;
+pub mod semihosting;
 
 use core::ops::Drop;
 
@@ -73,6 +74,14 @@ pub fn dmb() {
         asm!("dmb ish" :::: "volatile");
     }
 }
+
+/// wfi instruction
+pub fn wfi() {
+    unsafe {
+        asm!("wfi" :::: "volatile");
+    }
+}
+
 
 /// isb instruction
 pub fn isb() {

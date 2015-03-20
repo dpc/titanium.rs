@@ -25,3 +25,7 @@ pub mod consts;
 
 #[macro_use]
 pub mod selftest;
+
+mod titanium {
+    pub use super::selftest;
+}
