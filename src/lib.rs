@@ -9,6 +9,7 @@
 
 #![crate_name="titanium"]
 
+#[macro_use]
 extern crate core;
 
 #[macro_use]

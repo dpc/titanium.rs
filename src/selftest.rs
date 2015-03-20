@@ -1,5 +1,6 @@
 use core::intrinsics::{transmute, size_of};
 use core::iter::range_step;
+use core::fmt::Write;
 
 pub use drv;
 
@@ -24,39 +25,41 @@ macro_rules! selftest {
     }
 }
 
-selftest!(testx (uart : &mut drv::Uart) {
-    uart.put('x' as u8);
+selftest!(testx (uart : &mut drv::uart::UartWriter) {
+    write!(uart, "testx").unwrap();
 });
 
 
-selftest!(testy (uart : &mut drv::Uart) {
-    uart.put('y' as u8);
+selftest!(testy (uart : &mut drv::uart::UartWriter) {
+    write!(uart, "testx").unwrap();
 });
 
 
 #[allow(dead_code)]
-fn selftest_run(mut uart : &mut drv::Uart) {
+fn selftest_run(mut uart : &mut drv::uart::UartWriter) {
 
     let start : usize = &_selftest_start as *const _ as usize;
     let end : usize = &_selftest_end as *const _ as usize;
 
     for test in range_step(start, end, unsafe {size_of::<usize>()}) {
 
-        let f : fn (mut uart : &mut drv::Uart) = {
+        let f : fn (mut uart : &mut drv::uart::UartWriter) = {
             unsafe {
                 let addr : &usize = transmute(test);
                 transmute(*addr)
             }
         };
 
+        write!(uart, "Test...").unwrap();
         (f)(uart);
+        write!(uart, " done\n").unwrap();
     }
 }
 
 #[cfg(feature = "selftest")]
-pub fn selftest(uart : &mut drv::Uart) {
+pub fn selftest(uart : &mut drv::uart::UartWriter) {
     selftest_run(uart);
 }
 
 #[cfg(not(feature = "selftest"))]
-pub fn selftest(_ : &mut drv::Uart) {}
+pub fn selftest(_ : &mut drv::uart::UartWriter) {}
