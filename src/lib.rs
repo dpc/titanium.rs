@@ -19,9 +19,11 @@ pub mod macros;
 pub mod arch;
 
 pub mod lang;
-pub mod io;
 pub mod drv;
 pub mod consts;
+pub mod hw;
+
+pub use hw::HW;
 
 #[macro_use]
 pub mod selftest;
