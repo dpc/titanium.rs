@@ -1,5 +1,4 @@
 use core::intrinsics::{transmute, size_of};
-use core::iter::range_step;
 use core::fmt::Write;
 
 use arch;
@@ -78,7 +77,7 @@ fn selftest_run(mut uart : &mut drv::uart::UartWriter) {
     let mut ok_i = 0u32;
 
     write!(uart, "SELFTEST START\n").unwrap();
-    for addr in range_step(start, end, unsafe {size_of::<usize>()}) {
+    for addr in (start..end).step_by(unsafe {size_of::<usize>()}) {
 
         let t : &TestEntry = {
             unsafe {

@@ -3,6 +3,7 @@
 #![feature(lang_items)]
 #![feature(asm)]
 #![feature(static_assert)]
+#![feature(step_by)]
 #![no_std]
 
 #![feature(trace_macros)]
