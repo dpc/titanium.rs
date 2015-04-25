@@ -1,5 +1,7 @@
 # Titanium.rs
 
+[![Build Status](https://travis-ci.org/dpc/rdu.svg?branch=master)](https://travis-ci.org/dpc/titanium)
+
 [Titanium.rs][titanium] is a collection of low-level macros, functions and
 constants that can be reused by other software targeting bare-metal development
 in Rust.

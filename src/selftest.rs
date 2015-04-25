@@ -20,51 +20,20 @@ pub struct TestEntry {
 }
 
 #[macro_export]
-#[cfg(feature = "selftest")]
 macro_rules! selftest {
-    ($name:ident ($uart:ident : $uart_t:ty) $code:block) => {
-
-        fn $name($uart: $uart_t) -> bool {
-
-            use ::titanium::selftest::TestEntry;
-
-            static TEST_ENTRY : TestEntry = TestEntry {
-                func: $name,
-                name: stringify!($name),
-            };
-
-            /* FIXME: TODO: Rustc will not emit this :(
-             * We need __attribute__((used)) or a workaround. */
-            #[allow(dead_code)]
-            #[link_section = ".titanium.selftest"]
-            static TEST_ENTRY_P : &'static TestEntry = &TEST_ENTRY;
-
-            $code
-        }
-    }
-}
-
-#[macro_export]
-#[cfg(not(feature = "selftest"))]
-macro_rules! selftest {
-    ($name:ident ($uart:ident : $uart_t:ty) $code:block) => {
-
-        #[link_section = ".titanium.discard"]
-        fn $name($uart: $uart_t) -> bool {
-
-            use ::titanium::selftest::TestEntry;
-
-            static TEST_ENTRY : TestEntry = TestEntry {
-                func: $name,
-                name: stringify!($name),
-            };
-
-            #[allow(dead_code)]
-            #[link_section = ".titanium.discard"]
-            static TEST_ENTRY_P : &'static TestEntry = &TEST_ENTRY;
-
-            $code
-        }
+    (fn $name:ident ($uart:ident) $code:block) => {
+        /* FIXME: TODO: Rustc will not always emit this :(
+         * We need __attribute__((used)) or a workaround. */
+        #[allow(dead_code)]
+        #[allow(non_upper_case_globals)]
+        #[cfg_attr(not(feature = "selftest"), link_section = ".titanium.selftest")]
+        #[cfg_attr(feature = "selftest", link_section = ".titanium.discard")]
+        pub static $name : &'static ::titanium::selftest::TestEntry = &::titanium::selftest::TestEntry {
+            func: { fn f($uart: &mut ::titanium::drv::uart::UartWriter) -> bool {
+                $code
+            } ;f},
+            name: stringify!($name),
+        };
     }
 }
 
