@@ -33,6 +33,8 @@ macro_rules! selftest {
                 name: stringify!($name),
             };
 
+            /* FIXME: TODO: Rustc will not emit this :(
+             * We need __attribute__((used)) or a workaround. */
             #[allow(dead_code)]
             #[link_section = ".titanium.selftest"]
             static TEST_ENTRY_P : &'static TestEntry = &TEST_ENTRY;
