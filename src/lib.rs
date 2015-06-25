@@ -2,8 +2,10 @@
 #![feature(core)]
 #![feature(lang_items)]
 #![feature(asm)]
-#![feature(static_assert)]
 #![feature(step_by)]
+#![feature(custom_attribute)]
+#![feature(core_intrinsics)]
+#![feature(core_str_ext)]
 #![no_std]
 
 #![feature(trace_macros)]
