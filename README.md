@@ -1,3 +1,9 @@
+## Note
+
+Titanium.rs has been merged into [Titanos][titanos] project, so this repo is stale.
+Maybe one day there'll be a reason to sparate them again, but ATM it was just and obstacle
+during prototyping.
+
 # Titanium.rs
 
 [![Build Status](https://travis-ci.org/dpc/rdu.svg?branch=master)](https://travis-ci.org/dpc/titanium)
